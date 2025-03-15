@@ -18,7 +18,7 @@ const TradingInterface: React.FC<TradingInterfaceProps> = ({ account }) => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Swap WETH for DAI</h2>
+      <h2 className={styles.title}>Create NFT Ticket</h2>
       <p className={styles.account}>Connected account: {account}</p>
       <div className={styles.inputContainer}>
         <input
