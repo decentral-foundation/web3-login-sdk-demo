@@ -6,7 +6,8 @@
 npm run dev
 ```
 
-!()[https://imgur.com/a/sRygJXl]
+![image](https://github.com/user-attachments/assets/e7c959b5-a154-4873-a769-548286398fa6)
+
 
 Currently, two official plugins are available:
 
