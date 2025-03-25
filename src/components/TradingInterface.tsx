@@ -108,8 +108,22 @@ const TradingInterface: React.FC<TradingInterfaceProps> = ({ account, onLogout }
   const handleSupport = async () => {
     console.log("expect lucia sdk call to be made");
     await lucia.buttonClick("support button called");
-    const ticket = TICKET_OPTIONS.find(t => t.type === selectedTicket);
-    console.log(`Staking $${ticket?.price} for ${ticket?.name} ticket from account ${account}`);
+
+    // Create email content
+    const subject = `Support Request - ${networkName} Network`;
+    const body = `
+      Account: ${account}
+      Network: ${networkName}
+      Chain ID: ${chainId}
+      Balance: ${balance}
+
+      Please describe your issue here:`;
+
+    // Encode the subject and body for the mailto link
+    const mailtoLink = `mailto:team@luciaprotocol.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    // Open default email client
+    window.location.href = mailtoLink;
   };
 
   const handleStake = async () => {
