@@ -21,6 +21,11 @@ const App: React.FC = () => {
     setAccount(connectedAccount);
   };
 
+  const handleLogout = () => {
+    setAccount(null);
+    console.log('Logged out');
+  };
+
   useEffect(() => {
     console.log('Account state updated:', account);
   }, [account]);
@@ -33,7 +38,7 @@ const App: React.FC = () => {
         <MetaMaskLogin onLogin={handleLogin} />
       ) : (
         <>
-          <TradingInterface account={account} />
+          <TradingInterface account={account} onLogout={handleLogout} />
         </>
       )}
     </div>

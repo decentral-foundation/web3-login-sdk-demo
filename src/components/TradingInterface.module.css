@@ -4,16 +4,49 @@
   padding: 20px;
 }
 
-.title {
-  text-align: center;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
+  padding: 0 10px;
+}
+
+.title {
+  margin: 0;
+}
+
+.logoutButton {
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: #e74c3c;
+}
+
+.logoutButton:hover {
+  background-color: #c0392b;
 }
 
 .account {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-size: 0.9em;
   color: #666;
+}
+
+.network {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+  color: #2ecc71;
+  font-weight: 500;
+}
+
+.balance {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.1em;
+  color: #3498db;
+  font-weight: 500;
 }
 
 .inputContainer {
