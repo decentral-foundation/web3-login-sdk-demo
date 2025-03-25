@@ -8,6 +8,10 @@ npm run dev
 
 ![image](https://github.com/user-attachments/assets/e7c959b5-a154-4873-a769-548286398fa6)
 
+## Updates on UI
+
+1. You choose your ticket type
+2. Then after you stake your USDT, you can view the ticket. 
 
 Currently, two official plugins are available:
 
