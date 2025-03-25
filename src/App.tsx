@@ -15,7 +15,8 @@ const etherscanApiKey = import.meta.env.VITE_ETHERSCAN_API_KEY;
 
 const App: React.FC = () => {
   const [account, setAccount] = useState<string | null>(null);
-
+  LuciaSDK.pageView("Splash Page");
+  console.log("expect splash page to be tracked");
   const handleLogin = (connectedAccount: string) => {
     console.log(`Attempting to log in with account: ${connectedAccount}`);
     setAccount(connectedAccount);
@@ -23,6 +24,7 @@ const App: React.FC = () => {
 
   const handleLogout = () => {
     setAccount(null);
+    LuciaSDK.buttonClick("logout button called");
     console.log('Logged out');
   };
 

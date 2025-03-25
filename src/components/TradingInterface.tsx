@@ -28,6 +28,8 @@ const NETWORK_NAMES: { [key: string]: string } = {
   '5': 'Goerli Testnet',
   '1135': 'Lisk Mainnet',
   '4202': 'Lisk Testnet',
+  '137': 'Polygon Mainnet',
+  '80002': 'Polygon Amoy Testnet', // New Polygon testnet replacing Mumbai
   '1337': 'Local Network',
 };
 
@@ -36,6 +38,14 @@ const TradingInterface: React.FC<TradingInterfaceProps> = ({ account, onLogout }
   const [balance, setBalance] = useState<string>('0');
   const [chainId, setChainId] = useState<string>('');
   const [networkName, setNetworkName] = useState<string>('');
+
+  useEffect(() => {
+    const trackPage = async () => {
+      console.log("expect trading interface page to be tracked");
+      await lucia.pageView("Trading Interface");
+    };
+    trackPage();
+  }, []);
 
   useEffect(() => {
     const getNetworkInfo = async () => {
@@ -47,6 +57,12 @@ const TradingInterface: React.FC<TradingInterfaceProps> = ({ account, onLogout }
           const chainIdDec = parseInt(chainIdHex).toString();
           setChainId(chainIdDec);
           setNetworkName(NETWORK_NAMES[chainIdDec] || 'Unknown Network');
+          
+          // Adjust balance display for Polygon networks
+          const currency = ['137', '80002'].includes(chainIdDec) ? 'MATIC' : 'ETH';
+          const balanceWei = await provider.getBalance(account);
+          const balanceFormatted = ethers.formatEther(balanceWei);
+          setBalance(`${parseFloat(balanceFormatted).toFixed(4)} ${currency}`);
         } catch (error) {
           console.error('Error fetching network:', error);
           setChainId('Error');
@@ -56,17 +72,8 @@ const TradingInterface: React.FC<TradingInterfaceProps> = ({ account, onLogout }
     };
 
     const getBalance = async () => {
-      if (window.ethereum) {
-        try {
-          const provider = new ethers.BrowserProvider(window.ethereum);
-          const balanceWei = await provider.getBalance(account);
-          const balanceEth = ethers.formatEther(balanceWei);
-          setBalance(parseFloat(balanceEth).toFixed(4));
-        } catch (error) {
-          console.error('Error fetching balance:', error);
-          setBalance('Error');
-        }
-      }
+      // Balance is now handled in getNetworkInfo to show correct currency
+      return;
     };
 
     getNetworkInfo();
@@ -98,15 +105,21 @@ const TradingInterface: React.FC<TradingInterfaceProps> = ({ account, onLogout }
     };
   }, [account]);
 
-  const handleSupport = () => {
+  const handleSupport = async () => {
     console.log("expect lucia sdk call to be made");
+    await lucia.buttonClick("support button called");
     const ticket = TICKET_OPTIONS.find(t => t.type === selectedTicket);
     console.log(`Staking $${ticket?.price} for ${ticket?.name} ticket from account ${account}`);
   };
 
-  const handleApprove = () => {
+  const handleStake = async () => {
+    console.log("expect lucia sdk call to be made for stake button");
+    await lucia.buttonClick("stake button called");
+    
     const ticket = TICKET_OPTIONS.find(t => t.type === selectedTicket);
-    console.log(`Approving $${ticket?.price} for ${ticket?.name} ticket`);
+    console.log(`Staking $${ticket?.price} for ${ticket?.name} ticket`);
+    await lucia.trackConversion("checkout", ticket?.price, ticket?.name);
+    
   };
 
   return (
@@ -134,7 +147,7 @@ const TradingInterface: React.FC<TradingInterfaceProps> = ({ account, onLogout }
         </select>
       </div>
       <div className={styles.buttonContainer}>
-        <button onClick={handleApprove} className={styles.button}>
+        <button onClick={handleStake} className={styles.button}>
           Stake Amount
         </button>
         <button onClick={handleSupport} className={styles.button}>

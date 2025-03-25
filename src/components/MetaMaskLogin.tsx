@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import lucia from "lucia-sdk";
 
 interface MetaMaskLoginProps {
   onLogin: (account: string) => void;
@@ -20,7 +20,28 @@ const MetaMaskLogin: React.FC<MetaMaskLoginProps> = ({ onLogin }) => {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
         const address = await signer.getAddress();
-        console.log('Connected address:', address);
+        
+        // Get network information
+        const network = await provider.getNetwork();
+        const chainIdHex = network.chainId.toString();
+        const chainIdDec = parseInt(chainIdHex).toString();
+        
+        console.log('Connected address:', address, 'Chain ID:', chainIdDec);
+        
+        try {
+          console.log("Sending wallet info to Lucia:", {
+            address,
+            chainId: parseInt(chainIdDec),
+            wallet: 'Metamask'
+          });
+          await lucia.sendWalletInfo(address, parseInt(chainIdDec), 'Metamask');
+          console.log('Successfully sent wallet info to Lucia');
+        } catch (luciaError) {
+          console.error('Failed to send wallet info to Lucia:', luciaError);
+          // Continue with login even if Lucia tracking fails
+        }
+        
+        // Complete the login process
         onLogin(address);
       } catch (error) {
         console.error('Failed to connect wallet:', error);
